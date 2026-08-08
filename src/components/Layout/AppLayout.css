@@ -1,0 +1,531 @@
+/* ==========================================================================
+   Enterprise Sidebar (hover-to-expand) — AppLayout
+   Collapsed: 72px  |  Expanded: 260px  |  Transition: 280ms ease-in-out
+   ========================================================================== */
+
+:root {
+  --sidebar-w: 72px;
+  --sidebar-w-expanded: 260px;
+  --sidebar-transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Base sidebar ------------------------------------------------------- */
+.app-sidebar {
+  /* Theme-aware sidebar tokens (overridden under .dark) */
+  --sb-bg: #032f25;
+  --sb-hover: #053d30;
+  --sb-border: rgba(6, 78, 59, 0.5);
+  --sb-profile-bg: rgba(0, 0, 0, 0.1);
+  --sb-active-bg: #eec8b7;
+  --sb-active-text: #451a03;
+  --sb-search-bg: #053d30;
+  --sb-search-border: #065f46;
+  --sb-tooltip-bg: #0a2a22;
+  --sb-text: #cbd5e1;
+  --sb-accent: #34d399;
+
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  max-width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 40;
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  border-right: 1px solid var(--sb-border);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+  overflow: visible;
+  will-change: width;
+  transition: width var(--sidebar-transition), transform var(--sidebar-transition);
+}
+
+.dark .app-sidebar {
+  --sb-bg: #0f172a;
+  --sb-hover: #1e293b;
+  --sb-border: rgba(148, 163, 184, 0.15);
+  --sb-profile-bg: rgba(148, 163, 184, 0.06);
+  --sb-active-bg: #1e293b;
+  --sb-active-text: #34d399;
+  --sb-search-bg: #1e293b;
+  --sb-search-border: #334155;
+  --sb-tooltip-bg: #1f2937;
+}
+
+.app-sidebar.expanded {
+  width: var(--sidebar-w-expanded);
+  min-width: var(--sidebar-w-expanded);
+  max-width: var(--sidebar-w-expanded);
+}
+
+/* --- Mobile overlay mode ------------------------------------------------- */
+.app-sidebar--mobile {
+  position: fixed;
+  inset-block: 0;
+  left: 0;
+  width: var(--sidebar-w-expanded);
+  min-width: var(--sidebar-w-expanded);
+  max-width: var(--sidebar-w-expanded);
+  transform: translateX(-100%);
+  z-index: 50;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  transition: transform var(--sidebar-transition);
+}
+
+.app-sidebar--mobile.is-open {
+  transform: translateX(0);
+}
+
+.sb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(2, 20, 16, 0.45);
+  backdrop-filter: blur(2px);
+  animation: sb-fade var(--sidebar-transition) ease;
+}
+
+/* --- Scrolling body of the sidebar --------------------------------------- */
+.sb-top {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sb-top::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sb-top::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.25);
+  border-radius: 4px;
+}
+
+/* --- Brand / logo --------------------------------------------------------- */
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding-inline: 20px;
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-logo {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sb-brand-mark {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #34d399;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sb-brand-dot {
+  width: 6px;
+  height: 6px;
+  background: #34d399;
+  border-radius: 9999px;
+}
+
+.sb-logo-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* --- User profile --------------------------------------------------------- */
+.sb-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--sb-border);
+  background: var(--sb-profile-bg);
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-profile {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sb-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #ffedd5;
+  color: #9a3412;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sb-profile-info {
+  display: none;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.app-sidebar.expanded .sb-profile-info {
+  display: flex;
+  animation: sb-fade-in var(--sidebar-transition) ease;
+}
+
+.sb-profile-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.sb-profile-role {
+  font-size: 11px;
+  color: #5eead4;
+  font-weight: 500;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+/* --- Menu search ---------------------------------------------------------- */
+.sb-search {
+  padding: 12px 12px 4px;
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-search {
+  display: none;
+}
+
+.sb-search-input {
+  width: 100%;
+  background: var(--sb-search-bg);
+  border: 1px solid var(--sb-search-border);
+  border-radius: 6px;
+  padding: 6px 12px 6px 36px;
+  font-size: 12px;
+  color: #cbd5e1;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.sb-search-input::placeholder {
+  color: #047857;
+}
+
+.dark .sb-search-input::placeholder {
+  color: #64748b;
+}
+
+.sb-search-input:focus {
+  border-color: var(--sb-accent);
+}
+
+/* --- Navigation ----------------------------------------------------------- */
+.sb-nav {
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-nav-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #cbd5e1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sb-nav-item:hover {
+  background: var(--sb-hover);
+  color: #e2e8f0;
+}
+
+.sb-nav-item.is-active {
+  background: var(--sb-active-bg);
+  color: var(--sb-active-text);
+  font-weight: 600;
+}
+
+/* Subtle active indicator bar */
+.sb-nav-item.is-active::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 55%;
+  border-radius: 0 3px 3px 0;
+  background: var(--sb-accent);
+}
+
+.sb-nav-item--danger:hover {
+  background: rgba(190, 18, 60, 0.15);
+  color: #fda4af;
+}
+
+.app-sidebar:not(.expanded) .sb-nav-item {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+/* Labels: hidden when collapsed, fade+slide in when expanded */
+.sb-label {
+  display: none;
+}
+
+.app-sidebar.expanded .sb-label {
+  display: block;
+  animation: sb-fade-in var(--sidebar-transition) ease;
+}
+
+.sb-label--flex {
+  flex: 1;
+  text-align: left;
+}
+
+/* Group chevron */
+.sb-group-chevron {
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.sb-group-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.app-sidebar:not(.expanded) .sb-group-chevron {
+  display: none;
+}
+
+/* Collapsible submenu (Sales / CRM children) — animated via grid rows */
+.sb-group-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--sidebar-transition) ease, opacity var(--sidebar-transition) ease;
+}
+
+.sb-group-children-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sb-group[data-open="true"] > .sb-group-children {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.app-sidebar:not(.expanded) .sb-group-children {
+  display: none;
+}
+
+.sb-subitem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 7px 12px;
+  margin-left: 40px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sb-subitem:hover {
+  color: #fff;
+}
+
+.sb-subitem.is-active {
+  color: #34d399;
+  font-weight: 700;
+  background: rgba(52, 211, 153, 0.08);
+}
+
+/* --- Nested groups (CRM / Customer Purchase Request / Sales Execution under the Sales root) --- */
+.sb-group--nested {
+  position: relative;
+}
+
+/* Nested group header: indented under the Sales root (mirrors ERP sub-indent) */
+.sb-group--nested > .sb-nav-item {
+  margin-left: 14px;
+  padding-left: 8px;
+  font-size: 12.5px;
+}
+
+.sb-group--nested > .sb-nav-item .sb-label {
+  font-weight: 600;
+}
+
+/* Children of a nested group sit deeper; guide line mirrors ERP .menu-sub::before */
+.sb-group--nested .sb-group-children-inner {
+  position: relative;
+}
+
+.sb-group--nested .sb-group-children-inner::before {
+  content: "";
+  position: absolute;
+  left: 38px;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(52, 211, 153, 0.2);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.sb-group--nested[data-open="true"] .sb-group-children-inner::before {
+  opacity: 1;
+}
+
+/* Sub-items inside a nested group align deeper than the group label */
+.sb-group--nested .sb-subitem {
+  margin-left: 62px;
+}
+
+.app-sidebar:not(.expanded) .sb-group--nested > .sb-nav-item {
+  margin-left: 0;
+}
+
+/* --- Bottom utility controls ---------------------------------------------- */
+.sb-bottom {
+  flex-shrink: 0;
+  padding: 8px 6px;
+  border-top: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* --- Tooltip (collapsed only) --------------------------------------------- */
+.sb-tooltip {
+  position: fixed;
+  transform: translateY(-50%);
+  z-index: 90;
+  background: var(--sb-tooltip-bg);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: sb-tooltip-in 160ms ease 60ms forwards;
+}
+
+/* --- Keyframes ------------------------------------------------------------- */
+@keyframes sb-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sb-tooltip-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Reduced motion -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar--mobile,
+  .sb-backdrop,
+  .sb-label,
+  .sb-group-children,
+  .sb-group-chevron,
+  .sb-profile-info {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Disabled / coming-soon items (mirrors ERP .menu-item.coming-soon) */
+.sb-nav-item.is-disabled,
+.sb-subitem.is-disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.sb-nav-item.is-disabled:hover,
+.sb-subitem.is-disabled:hover {
+  background: transparent;
+  color: #cbd5e1;
+}
+
+.sb-subitem.is-disabled {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-coming-soon-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: #fef3c7;
+  color: #d97706;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.dark .sb-coming-soon-badge {
+  background: rgba(11, 74, 61, 0.2);
+  color: #5cb8a8;
+}
+
+.app-sidebar:not(.expanded) .sb-coming-soon-badge {
+  display: none;
+}

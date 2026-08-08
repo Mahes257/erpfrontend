@@ -1,0 +1,26 @@
+# React
+node_modules/
+dist/
+
+# Spring Boot
+erp-backend/target/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary / audit files
+.audit-e2e/
+evidence/
