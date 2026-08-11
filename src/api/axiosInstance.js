@@ -4,7 +4,7 @@ import axios from 'axios';
 // Same-origin (/v1) so the app works identically on localhost and the ngrok URL
 // from any device; Vite dev-server proxy forwards /v1 to the backend.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/v1',
+  baseURL: 'https://industrious-commitment-production-65cb.up.railway.app/v1',
   headers: {
     'Content-Type': 'application/json',
   },
